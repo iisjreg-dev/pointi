@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <base href="/app/" />
+    <title>Pointi</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="yes" />
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/plugins/mobile-angular-ui/css/mobile-angular-ui-hover.min.css" />
+    <link rel="stylesheet" href="/plugins/mobile-angular-ui/css/mobile-angular-ui-base.min.css" />
+    <link rel="stylesheet" href="/plugins/mobile-angular-ui/css/mobile-angular-ui-desktop.min.css" />
+    <link rel="stylesheet" href="demo.css" />
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-touch.min.js"></script>
+    <script src="/plugins/mobile-angular-ui/js/mobile-angular-ui.min.js"></script>
+    <script src="/plugins/ng-google-chart.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.0.6/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.9.0/angularfire.min.js"></script>
+    <script src="app.js"></script>
+</head>
+
+<body ng-app="MobileAngularUiExamples" ng-controller="MainController">
+
+    <!-- Sidebars -->
+    <div ng-include="'sidebar.html'" class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar"></div>
+
+    <div ng-include="'sidebarRight.html'" class="sidebar sidebar-right" toggleable parent-active-class="sidebar-right-in" id="rightSidebar"></div>
+
+    <div class="app">
+
+        <!-- Navbars -->
+
+        <div class="navbar navbar-app navbar-absolute-top">
+            <div class="navbar-brand navbar-brand-center" yield-to="title">
+                <span>Pointi score keeping</span>
+            </div>
+            <div class="btn-group pull-left">
+                <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
+                    <i class="fa fa-bars"></i>
+                </div>
+            </div>
+            <div class="btn-group pull-right" yield-to="navbarAction">
+            </div>
+        </div>
+        <div class="navbar navbar-app navbar-absolute-bottom">
+            <div class="btn-group justified" yield-to="footerBar">
+                <a class="btn btn-navbar" onClick="history.go(-1)"><i class="fa fa-chevron-left"></i></a>
+                <a ng-click="" class="btn btn-navbar"><i class="fa fa-circle-o-notch"></i></a>
+            </div>
+        </div>
+
+        <!-- App Body -->
+        <div class="app-body" ng-class="{loading: loading}">
+            <div ng-show="loading" class="app-content-loading">
+                <i class="fa fa-child fa-spin loading-spinner"></i>
+            </div>
+
+            <ng-view class="app-content" ng-hide="loading"></ng-view>
+        </div>
+        <!-- LOGIN OVERLAY FOR ALL PAGES -->
+        <div ng-hide="user">
+            <div overlay="overlay-login">
+                <div class="text-center">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">Welcome, please log in.</div>
+                        <div class="panel-body">
+                            <form class="form-inline" role="form" ng-submit="login()">
+                                <div class="btn-group-vertical" role="group">
+                                    <input type='text' ng-model='form.email' id='email' placeholder='Email' class="form-control">
+                                    <input type='password' ng-model='form.password' id='password' placeholder='Password' class="form-control">
+                                    <button type="submit" class="btn btn-primary form-control">Login</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <p>
+                    <div class="text-center">
+                        <div class="panel panel-info">
+                            <div class="panel-body"><span ng-click="displayNewAccountForm();" class="btn btn-primary form-control">or create New Account</span>
+                            </div>
+                        </div>
+                    </div>
+                </p>
+            </div>
+            <div overlay="overlay-create-new-acc">
+                <div class="text-center">
+                    <div class="panel panel-info">
+                        <div class="panel-heading">create New Account</div>
+                        <div class="panel-body">
+                            <form class="form-inline" role="form" ng-submit="newAccount()">
+                                <div class="btn-group-vertical" role="group">
+                                    <input type='text' ng-model='form.newEmail' id='newemail' placeholder='Email' class="form-control">
+                                    <input type='text' ng-model='form.newName' id='newname' placeholder='Name' class="form-control">
+                                    <input label="Player Colour" type="color" id="color" ng-model='form.newColor' class="form-control">
+                                    <input type='password' ng-model='form.newPassword' id='newpassword' placeholder='Password' class="form-control">
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <!-- ~ .app -->
+
+</body>
+
+</html>
