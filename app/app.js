@@ -7,54 +7,21 @@ app.factory("Auth", ["$firebaseAuth",
 ]);
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
-        templateUrl: "score4.html"
+        templateUrl: "plays.html"
     });
     $routeProvider.when('/about', {
-        templateUrl: "home.html"
+        templateUrl: "info.html"
     });
-    $routeProvider.when('/scroll', {
-        templateUrl: "scroll.html"
-    });
-    $routeProvider.when('/toggle', {
-        templateUrl: "toggle.html"
-    });
-    $routeProvider.when('/tabs', {
-        templateUrl: "tabs.html"
-    });
-    $routeProvider.when('/accordion', {
-        templateUrl: "accordion.html"
-    });
-    $routeProvider.when('/overlay', {
-        templateUrl: "overlay.html"
-    });
-    $routeProvider.when('/forms', {
-        templateUrl: "forms.html"
-    });
-    $routeProvider.when('/chat', {
-        templateUrl: "chat.html"
-    });
-    $routeProvider.when('/score', {
-        templateUrl: "score.html"
-    });
-    $routeProvider.when('/score2', {
-        templateUrl: "score2.html"
-    });
-    $routeProvider.when('/score3', {
-        templateUrl: "score3.html"
-    });
-    $routeProvider.when('/score4', {
-        templateUrl: "score4.html"
-    });
-    $routeProvider.when('/score3/plays/:playID', {
-        templateUrl: "score3-play.html"
+    $routeProvider.when('/plays/:playID', {
+        templateUrl: "play.html"
         //params.playID
     });
-    $routeProvider.when('/score4/plays/:playID', {
-        templateUrl: "score4-play.html"
+    $routeProvider.when('/plays/history/:playID', {
+        templateUrl: "history.html"
         //params.playID
     });
-    $routeProvider.when('/score3/plays/history/:playID', {
-        templateUrl: "score3-history.html"
+    $routeProvider.when('/plays/details/:playID', {
+        templateUrl: "details.html"
         //params.playID
     });
     $routeProvider.when('/user', {
@@ -290,9 +257,10 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
             //PLAYERS REF
             var playerRef = new Firebase("https://pointi.firebaseio.com/plays/" + params.playID + "/players");
             var players = $firebase(playerRef).$asArray();
-            //CAHT REF
+            //CHAT REF
             var chatRef = new Firebase("https://pointi.firebaseio.com/plays/" + params.playID + "/chat");
             var messages = $firebase(chatRef).$asArray();
+            var messageCount = $firebase(chatRef).$asObject();
             var myFriendsRef = new Firebase("https://pointi.firebaseio.com/friends/" + $scope.user.uid);
             var friends = $firebase(myFriendsRef).$asArray();
             friends.$loaded().then(function() {
@@ -304,6 +272,11 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 $scope.messages = messages;
                 $scope.numberOfMessages = messages.length;
             });
+            //chatRef.on("child_added", function(snapshot) {
+            //    messages = $firebase(chatRef).$asArray();
+            //    $scope.messages = messages;
+            //    $scope.numberOfMessages = messages.length;
+            //});
             players.$loaded().then(function() {
                 $rootScope.loading = false;
                 //console.log(players.length + " players in play");
@@ -397,11 +370,11 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 $scope.addMessage = function() {
                     var time = new Date();
                     console.log("msg");
-                    console.log(time);
-                    console.log($scope);
+                    //console.log(time);
+                    //console.log($scope);
                     console.log($scope.$$childTail.msg);
-                    console.log($scope.user.uid);
-                    console.log($scope.userDetails.name);
+                    //console.log($scope.user.uid);
+                    //console.log($scope.userDetails.name);
                     $scope.messages.$add({
                         name: $scope.userDetails.name,
                         text: $scope.$$childTail.msg,
@@ -410,7 +383,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     });
                     //RESET MESSAGE
                     $scope.$$childTail.msg = "";
-                    console.log("msg added");
+                    //console.log("msg added");
                 }
                 $scope.changeColor = function(player) {
                     var colors = ["blue", "red", "yellow", "green", "orange"];
@@ -673,9 +646,9 @@ app.controller('MainController', function($rootScope, $scope, $firebase, $window
         $window.location.href = "#/";
         $window.location.reload();
     }
-    $scope.displayNewAccountForm = function() {
-        $rootScope.toggle('overlay-login', 'off');
-        $rootScope.toggle('overlay-create-new-acc', 'on');
+    $scope.swapOverlay = function(overlayOff, overlayOn) {
+        $rootScope.toggle(overlayOff, 'off');
+        $rootScope.toggle(overlayOn, 'on');
     }
     $scope.newAccount = function() {
         var isNewUser = true;

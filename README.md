@@ -1,9 +1,3 @@
-# Playground (currently working on Pointi - score keeping)
+# Pointi - Firebase-powered score keeping web app
 
-## Containing:
-
-* Angular
-* Bootstrap
-* Firebase
-* MobileAngularUI
-* JQuery
+Web app under development as a learning tool for Angular and Firebase

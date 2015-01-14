@@ -3,17 +3,17 @@
         <div ng-hide="user" class="text-center">
             <a href="#overlay-login" toggle="on" class="btn btn-standard"><i class="fa fa-sign-in"></i> Sign in / Register</a>
         </div>
-        <div ng-hide="numberOfPlayers">
-            <div class="panel panel-success">
-                <div class="panel-body text-center">
-                    Game created
-                    <form class="form-inline" role="form">
-                        <a class="btn btn-primary form-control" ng-click="addUserPlayer()">Add me to game</a>
-                    </form>
+        <div ng-if="user">
+            <div ng-hide="numberOfPlayers">
+                <div class="panel panel-success">
+                    <div class="panel-body text-center">
+                        Game created
+                        <form class="form-inline" role="form">
+                            <a class="btn btn-primary form-control" ng-click="addUserPlayer()">Add me to game</a>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div ng-if="user">
             <div class="list-group-item media container" ng-repeat="player in players | orderBy:scorePredicate:reverse">
                 <!-- new layout: minus | score (name below) | plus -->
                 <div class="row">
@@ -84,26 +84,42 @@
         </div>
     </div>
     <!-- OVERLAYS -->
-    <div overlay="overlay-new-player">
+    <div overlay="overlay-add-player">
         <div class="panel panel-success">
             <div class="panel-body">
-                <p><a class="btn btn-primary form-control" ng-click="addUserPlayer()" toggle="off" bubble target="overlay-new-player">Add me to game</a>
+                <p><a class="btn btn-success form-control" ng-click="addUserPlayer()" toggle="off" bubble target="overlay-add-player">Add me to game</a>
+                </p>
+                <p>
+                    <small><i class="fa fa-angle-down"></i></small>
                 </p>
                 <p>
                     <form class="form-inline" role="form" ng-submit="addFriendPlayer()">
                         <select class="form-control" ng-model="addFriend" ng-options="friend.name for friend in friends | filter: {status: 'APPROVED'}"></select>
-                        
-                        <button type="submit" class="btn btn-primary form-control" toggle="off" bubble target="overlay-new-player">Add friend to game</button>
+
+                        <button type="submit" class="btn btn-primary form-control" toggle="off" bubble target="overlay-add-player">Add friend to game</button>
                     </form>
                 </p>
+                <p>
+                    <small><i class="fa fa-angle-down"></i></small>
+                </p>
+                <p>
+                    <a class="btn btn-info form-control" ng-click="swapOverlay('overlay-add-player','overlay-new-player');">Add temporary player</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div overlay="overlay-new-player">
+        <div class="panel panel-success">
+            <div class="panel-body">
                 <p>
                     <form class="form-inline" role="form" ng-submit="addPlayer()">
 
                         <input type='text' ng-model='playerName' id='playerName' placeholder='Player Name (13 Character limit)' class="form-control" maxlength=13>
-                        
+
                         <input label="Player Colour" type="color" id="color" ng-model='color' class="form-control">
-                        
-                        <button type="submit" class="btn btn-primary form-control" toggle="off" bubble target="overlay-new-player">Add new player</button>
+
+                        <button type="submit" class="btn btn-info form-control" toggle="off" bubble target="overlay-new-player">Add new player</button>
 
                     </form>
                 </p>
@@ -111,13 +127,7 @@
         </div>
     </div>
 
-    <div overlay="overlay-info">
-        <div class="panel panel-success">
-            <div class="panel-heading">Game info.....</div>
-            <div class="panel-body">
-            </div>
-        </div>
-    </div>
+
     <!-- PAGE SPECIFIC CONTENT - TITLE/ACTION/SIDEBAR/FOOTER -->
     <div content-for="title">
         <span>{{play.gameName}}</span>
@@ -128,9 +138,9 @@
         <a ng-click="scorePredicate = '-playerScore'" class="btn btn-navbar"><i class="fa fa-sort-amount-desc"></i></a>
         <a ng-click="scorePredicate = 'turnOrder'" class="btn btn-navbar"><i class="fa fa-sort-numeric-asc"></i></a>
         <a ng-click="scorePredicate = 'playerName'" class="btn btn-navbar"><i class="fa fa-sort-alpha-asc"></i></a>
-        <a href="#overlay-info" toggle="on" class="btn btn-navbar"><i class="fa fa-info fa-navbar"></i></a>
-        <a href="#/score3/plays/history/{{play.$id}}" class="btn btn-navbar"><i class="fa fa-line-chart fa-navbar"></i></a>
-        <a href="#overlay-new-player" toggle="on" class="btn btn-navbar"><i class="fa fa-plus fa-navbar"></i><i class="fa fa-user fa-navbar"></i></a>
+        <a href="#/plays/details/{{play.$id}}" toggle="on" class="btn btn-navbar"><i class="fa fa-info fa-navbar"></i></a>
+        <a href="#/plays/history/{{play.$id}}" class="btn btn-navbar"><i class="fa fa-line-chart fa-navbar"></i></a>
+        <a href="#overlay-add-player" toggle="on" class="btn btn-navbar"><i class="fa fa-plus fa-navbar"></i><i class="fa fa-user fa-navbar"></i></a>
     </div>
 
     <div ng-if="user">
@@ -156,7 +166,7 @@
             </div>
             <div content-for="navbarAction">
                 <div ng-click="toggle('rightSidebar')" class="btn btn-navbar">
-                    <span class="badge"><i ng-if="numberOfMessages">{{numberOfMessages}}</i> <i class="fa fa-comments"></i></span>
+                    <span class="badge"><i ng-if="numberOfMessages">{{messages.length}}</i> <i class="fa fa-comments"></i></span>
                 </div>
             </div>
         </div>
