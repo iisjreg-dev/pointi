@@ -16,12 +16,16 @@ app.config(function($routeProvider, $locationProvider) {
         templateUrl: "play.html"
         //params.playID
     });
-    $routeProvider.when('/plays/history/:playID', {
+    $routeProvider.when('/plays/:playID/history', {
         templateUrl: "history.html"
         //params.playID
     });
-    $routeProvider.when('/plays/details/:playID', {
+    $routeProvider.when('/plays/:playID/details', {
         templateUrl: "details.html"
+        //params.playID
+    });
+    $routeProvider.when('/plays/:playID/edit/:playerID', {
+        templateUrl: "edit-player.html"
         //params.playID
     });
     $routeProvider.when('/user', {
@@ -66,6 +70,34 @@ app.controller('UserController', function($rootScope, $scope, $firebase, $locati
     //var usersRef = new Firebase("https://pointi.firebaseio.com/users/" + $scope.auth.uid);
     //var user = $firebase(usersRef).$asObject();
     //$scope.user = user;
+});
+app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
+    //EDITING PLAYER IN A GAME
+    $rootScope.loading = true;
+    var timer = [];
+    var params = $routeParams;
+    if($scope.user) {
+        if(params.playID) {
+            if(params.playerID) {
+                console.log("1. player update");
+                var playRef = new Firebase("https://pointi.firebaseio.com/plays/" + params.playID);
+                var playerRef = new Firebase("https://pointi.firebaseio.com/plays/" + params.playID + "/players/" + params.playerID);
+                var play = $firebase(playRef).$asObject();
+                var player = $firebase(playerRef).$asObject();
+                $rootScope.loading = false;
+                //var scores = scoresSync.$asObject();
+                //scores.$bindTo($scope, "scores");
+                $scope.play = play;
+                $scope.player = player;
+                $scope.updatePlayer = function() {
+                    console.log("2. player updated");
+                    //scores.p1Score = p1Score;
+                    //scores.p2Score = p2Score;
+                    player.$save();
+                }
+            }
+        }
+    }
 });
 app.controller('FriendsController', function($rootScope, $scope, $firebase, $location) {
     //FRIEND TESTING
@@ -331,6 +363,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                         $scope.numberOfPlayers = numberOfPlayers;
                         $scope.players.$add({
                             userUid: friend.$id,
+                            isUser: true,
                             playerName: friendName.substr(0, 13),
                             playerScore: 0,
                             turnOrder: 0,
@@ -358,6 +391,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     var name = $scope.userDetails.name;
                     $scope.players.$add({
                         userUid: $scope.user.uid,
+                        isUser: true,
                         playerName: name.substr(0, 13),
                         playerScore: 0,
                         turnOrder: 0,

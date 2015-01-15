@@ -138,8 +138,8 @@
         <a ng-click="scorePredicate = '-playerScore'" class="btn btn-navbar"><i class="fa fa-sort-amount-desc"></i></a>
         <a ng-click="scorePredicate = 'turnOrder'" class="btn btn-navbar"><i class="fa fa-sort-numeric-asc"></i></a>
         <a ng-click="scorePredicate = 'playerName'" class="btn btn-navbar"><i class="fa fa-sort-alpha-asc"></i></a>
-        <a href="#/plays/details/{{play.$id}}" toggle="on" class="btn btn-navbar"><i class="fa fa-info fa-navbar"></i></a>
-        <a href="#/plays/history/{{play.$id}}" class="btn btn-navbar"><i class="fa fa-line-chart fa-navbar"></i></a>
+        <a href="#/plays/{{play.$id}}/details" class="btn btn-navbar"><i class="fa fa-cogs fa-navbar"></i></a>
+        <a href="#/plays/{{play.$id}}/history" class="btn btn-navbar"><i class="fa fa-line-chart fa-navbar"></i></a>
         <a href="#overlay-add-player" toggle="on" class="btn btn-navbar"><i class="fa fa-plus fa-navbar"></i><i class="fa fa-user fa-navbar"></i></a>
     </div>
 

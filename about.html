@@ -51,41 +51,77 @@
                 </div>
 
                 <div class="inner cover">
-                    <h1 class="cover-heading">Score keeping, made for instant sharing</h1>
-                    <p>&nbsp;</p>
-                    <h2 class="cover-heading">
+                    <div role="tabpanel">
+
+                        <ul class="nav nav-pills nav-justified" role="tablist">
+                            <li role="presentation" class="active"><a href="#aboutTab" aria-controls="aboutTab" role="tab" data-toggle="tab">Intro</a>
+                            </li>
+                            <li role="presentation"><a href="#devTab" aria-controls="devTab" role="tab" data-toggle="tab">Currently in development</a>
+                            </li>
+                            <li role="presentation"><a href="#privacyTab" aria-controls="privacyTab" role="tab" data-toggle="tab">Privacy</a>
+                            </li>
+                        </ul>
+
+
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="aboutTab">
+
+                                <h1 class="cover-heading">Score keeping, made for instant sharing</h1>
+                                <p>&nbsp;</p>
+                                <h2 class="cover-heading">
                         <i class="fa fa-rocket fa-fw fa-2x" data-toggle="tooltip" data-placement="bottom" title="Instant"></i>&nbsp;
                         <i class="fa fa-cloud-upload fa-fw fa-2x" data-toggle="tooltip" data-placement="bottom" title="Online"></i>&nbsp;
                         <i class="fa fa-users fa-fw fa-2x" data-toggle="tooltip" data-placement="bottom" title="Shared"></i>&nbsp;
                         <i class="fa fa-mobile fa-fw fa-2x" data-toggle="tooltip" data-placement="bottom" title="Mobile"></i>&nbsp;
                         <i class="fa fa-smile-o fa-fw fa-2x" data-toggle="tooltip" data-placement="bottom" title="Fun"></i>&nbsp;
                     </h2>
-                    <p>&nbsp;</p>
-                    <p class="lead">Pointi is a <a href="http://www.firebase.com" class="label label-info">Firebase</a>-powered web app for keeping track of scores for boardgames or other activities.</p>
+                                <p>&nbsp;</p>
+                                <p class="lead">Pointi is a <u><a href="http://www.firebase.com">Firebase</a></u>-powered web app for keeping track of scores for boardgames or other activities.</p>
 
-                    <p>It started as an experiment with Firebase but the goal is to attempt to create a micro-social network for game recording and sharing... "GameCentre for the real world."</p>
+                                <p>It started as an experiment with Firebase but the goal is to attempt to create a micro-social network for game recording and sharing... "GameCentre for the real world". Currently, users can create accounts, friend each other and share access to individual games with friends. Firebase allows updates to the scores to be syncronised instantly across users/devices.</p>
+                                <p>&nbsp;</p>
+                            </div>
 
-                    <p>Currently, users can create accounts, friend each other and share access to individual games with friends. Firebase allows updates to the scores to be syncronised instantly across users/devices.</p>
-                    <p>&nbsp;</p>
-                </div>
-                <p class="text-left">Under Development:</p>
-                <ul class="fa-ul text-left">
-                    <li><i class="fa-li fa fa-check-square-o fa-fw"></i>Initial "Very Alpha" Release</li>
-                    <li><i class="fa-li fa fa-square-o fa-fw"></i>Game Collections</li>
-                    <li><i class="fa-li fa fa-square-o fa-fw"></i>Board Game Geek integration</li>
-                    <li><i class="fa-li fa fa-square-o fa-fw"></i>Stats</li>
-                    <li><i class="fa-li fa fa-square-o fa-fw"></i>Leaderboards</li>
-                    <li><i class="fa-li fa fa-square-o fa-fw"></i>Gallery</li>
-                </ul>
-                <div class="inner"><p><a href="privacy.html" class="label label-info">Privacy info</a></p></div>
+                            <div role="tabpanel" class="tab-pane fade" id="devTab">
+                                <p>&nbsp;</p>
+                                <h2>Under Development:</h2>
+                                <p>&nbsp;</p>
+                                <ul class="fa-ul">
+                                    <li><i class="fa fa-check-square-o fa-fw"></i>Initial "Very Alpha" Release</li>
+                                    <li><i class="fa fa-square-o fa-fw"></i>Game Collections</li>
+                                    <li><i class="fa fa-square-o fa-fw"></i>Board Game Geek integration</li>
+                                    <li><i class="fa fa-square-o fa-fw"></i>Stats</li>
+                                    <li><i class="fa fa-square-o fa-fw"></i>Leaderboards</li>
+                                    <li><i class="fa fa-square-o fa-fw"></i>Gallery</li>
+                                </ul>
+                                <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
 
-                <div class="mastfoot">
-                    <div class="inner">
-                        <p>Made by <a href="http://www.twitter.com/iisjreg">iisjreg</a> in <a href="http://www.codio.com">Codio</a>. Powered by <a href="http://www.firebase.com">Firebase</a>, <a href="https://angularjs.org/">Angular</a> & <a href="http://mobileangularui.com/">mobile-angular-ui</a>
-                        </p>
+                            </div>
+                            <div role="tabpanel" class="tab-pane fade" id="privacyTab">
+                            <p>&nbsp;</p><h2>Privacy information<br /><small><i>(not quite a policy...)</i></small></h2>
+                    <dl class="dl-horizontal">
+                        <dt>Passwords</dt>
+                        <dd class="text-left">User Accounts and authentication is handled directly using the Firebase API. Your password is only maintained by Firebase authentication servers - I never have access to it, only an authentication token.</dd>
+                        <dt>Other Data</dt>
+                        <dd class="text-left">The app and data is hosted by Firebase. I will never share with data with anybody else. In the current state of the app, it is likely that I will need to view data for development and testing purposes.</dd>
+                        <dt>"Very Alpha"</dt>
+                        <dd class="text-left">Problems are very likely at this stage in development and things may go wrong. However, once the 'status' of the app reaches "Beta"-like, all data will probably be removed completely to start fresh.</dd>
+                        <dt>Open Source</dt>
+                        <dd class="text-left">Full source is available on <a class="label label-info" href="https://github.com/iisjreg-dev/pointi">github</a>. I really am open to criticism and suggestions, as I am proper noob! :)</dd>
+                    </dl>
+                                <p>&nbsp;</p><p>&nbsp;</p>
+                            </div> 
+                        </div>
                     </div>
-                </div>
+                    
+                    <div class="mastfoot">
+                        <div class="inner">
+                            <p>Made by <a href="http://www.twitter.com/iisjreg">iisjreg</a> in <a href="http://www.codio.com">Codio</a>. Powered by <a href="http://www.firebase.com">Firebase</a>, <a href="https://angularjs.org/">Angular</a> & <a href="http://mobileangularui.com/">mobile-angular-ui</a> <i class="fa fa-angle-right fa-fw"></i> <a href="privacy.html" class="label label-info">Privacy info</a>
+                            </p>
+                        </div>
+                    </div>
 
+                </div>
             </div>
 
         </div>
@@ -99,8 +135,20 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script>
         $(function() {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+        $('#aboutTab a').click(function(e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+        $('#devTab a').click(function(e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
+        $('#privacyTab a').click(function(e) {
+            e.preventDefault()
+            $(this).tab('show')
+        });
     </script>
 </body>
 

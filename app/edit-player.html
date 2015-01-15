@@ -1,0 +1,41 @@
+<div class="scrollable" ng-controller="PlayerController">
+    <div class="scrollable-content section">
+        <div ng-hide="user" class="text-center">
+            <a href="#overlay-login" toggle="on" class="btn btn-standard"><i class="fa fa-sign-in"></i> Sign in / Register</a>
+        </div>
+        <div ng-if="user">
+            <div class="list-group">
+                <div class="list-group-item">
+                    <h4>{{player.playerName}}, playing {{play.gameName}}</h4> 
+                </div>
+                <div class="list-group-item">
+                    <form ng-submit="updatePlayer()">
+                        <div bs-panel>
+                            <input bs-form-control type="text" ng-model="player.playerName" label="Name" label-class="col-xs-3 col-sm-2 col-lg-1" class="col-xs-9 col-sm-10 col-lg-11" placeholder="Player Name" maxlength=13/>
+                            <!-- <input bs-form-control type="color" ng-model="player.color" label="Colour" label-class="col-xs-3 col-sm-2 col-lg-1" class="col-xs-9 col-sm-10 col-lg-11" /> -->
+                            <input label="Colour" type="color" id="color" ng-model='player.color' label-class="col-xs-3 col-sm-2 col-lg-1" class="col-xs-9 col-sm-10 col-lg-11 form-control">
+                        </div>
+                        <p>&nbsp;</p>
+                        <div bs-panel class="form-actions text-center">
+                            <button class="btn btn-primary">
+                                Save
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <div content-for="title">
+            <span>Edit Player</span>
+        </div>
+
+
+        <div content-for="footerBar">
+            <a class="btn btn-navbar" onClick="history.go(-1)"><i class="fa fa-chevron-left"></i></a>
+        </div>
+
+
+    </div>
+</div>
