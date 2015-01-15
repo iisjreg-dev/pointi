@@ -151,19 +151,19 @@
                     <i class="fa fa-arrow-right"></i>
                 </div>
             </div>
-            <div class="list-group-item" ng-repeat='msg in messages | orderBy:chatPredicate:reverse'>
-                <strong>{{msg.name}}</strong>: {{msg.text}}
-                <br />
-                <span class="btn btn-xs btn-default" disabled="disabled"><small>{{msg.time}}</small></span>
-            </div>
             <div class="list-group-item text-center">
                 <div>
                     <form role="form" ng-submit="addMessage()">
                         <input type='text' ng-model='msg' id='msg' placeholder='Comment' class="form-control">
                     </form>
-                    <br />
                 </div>
             </div>
+            <div class="list-group-item" ng-repeat='msg in messages | orderBy:chatPredicate:reverse'>
+                <strong>{{msg.name}}</strong>: {{msg.text}}
+                <br />
+                <span class="btn btn-xs btn-default" disabled="disabled"><small>{{msg.time}}</small></span>
+            </div>
+            
             <div content-for="navbarAction">
                 <div ng-click="toggle('rightSidebar')" class="btn btn-navbar">
                     <span class="badge"><i ng-if="numberOfMessages">{{messages.length}}</i> <i class="fa fa-comments"></i></span>

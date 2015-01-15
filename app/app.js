@@ -89,6 +89,7 @@ app.controller('PlayerController', function($rootScope, $scope, $firebase, $rout
                 //scores.$bindTo($scope, "scores");
                 $scope.play = play;
                 $scope.player = player;
+                //$scope.player.playerNameTitle = player.playername;
                 $scope.updatePlayer = function() {
                     console.log("2. player updated");
                     //scores.p1Score = p1Score;
