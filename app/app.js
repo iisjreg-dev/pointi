@@ -24,6 +24,10 @@ app.config(function($routeProvider, $locationProvider) {
         templateUrl: "details.html"
         //params.playID
     });
+    $routeProvider.when('/plays/:playID/delete', {
+        templateUrl: "delete-play.html"
+        //params.playID
+    });
     $routeProvider.when('/plays/:playID/edit/:playerID', {
         templateUrl: "edit-player.html"
         //params.playID
@@ -74,7 +78,7 @@ app.controller('UserController', function($rootScope, $scope, $firebase, $locati
 app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
     //EDITING PLAYER IN A GAME
     $rootScope.loading = true;
-    var timer = [];
+    //var timer = [];
     var params = $routeParams;
     if($scope.user) {
         if(params.playID) {
@@ -95,7 +99,50 @@ app.controller('PlayerController', function($rootScope, $scope, $firebase, $rout
                     //scores.p1Score = p1Score;
                     //scores.p2Score = p2Score;
                     player.$save();
+                    $window.history.go(-1);
                 }
+            }
+        }
+    }
+});
+app.controller('DeletePlayController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
+    //DELETING PLAY
+    //$rootScope.loading = true;
+    //var timer = [];
+    var params = $routeParams;
+    var playID = params.playID;
+    if($scope.user) {
+        if(playID) {
+            console.log("params.playID: " + playID);
+            var playRef = new Firebase("https://pointi.firebaseio.com/plays/" + playID);
+            //var play = $firebase(playRef).$asObject();
+            $scope.deletePlay = function() {
+                //console.log("delete play id: " + play.$id);
+                playRef.remove(function(error) {
+                    if(error) {
+                        console.log("error: " + error)
+                    }
+                    // data has been saved to Firebase
+                    var accessRef = new Firebase("https://pointi.firebaseio.com/play-access");
+                    accessRef.once('value', function(dataSnapshot) {
+                        dataSnapshot.forEach(function(childSnapshot) {
+                            //CHECK EACH ACCESS RECORD
+                            var user = childSnapshot.key();
+                            //console.log(id.ref());
+                            if(childSnapshot.child(playID).exists()) {
+                                var deleteRef = childSnapshot.child(playID).ref();
+                                deleteRef.remove(function(error) {
+                                    console.log("access record removed for: " + user);
+                                });
+                            }
+                        });
+                        console.log(" -> successful");
+                        $window.location.href = "#/";
+                        $window.location.reload();
+                    }, function(err) {
+                        console.log("Error with once(): " + err);
+                    });
+                });
             }
         }
     }
@@ -345,40 +392,42 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     $scope.playerName = "";
                 }
                 $scope.addFriendPlayer = function() {
-                    var time = new Date();
-                    //console.log("update time");
-                    play.time = time.toUTCString();
-                    play.ISOtime = time.toISOString();
-                    play.numberOfPlayers += 1;
-                    play.$save();
-                    var friend = $scope.addFriend;
-                    var friendColor = "";
-                    var friendName = "";
-                    var friendUserRef = new Firebase("https://pointi.firebaseio.com/users/" + friend.$id);
-                    friendUserRef.once('value', function(dataSnapshot) {
-                        //console.log("get user details");
-                        friendColor = dataSnapshot.child("details").child("favouriteColor").val();
-                        friendName = dataSnapshot.child("details").child("name").val();
-                        //console.log(friendColor);
-                        numberOfPlayers += 1;
-                        $scope.numberOfPlayers = numberOfPlayers;
-                        $scope.players.$add({
-                            userUid: friend.$id,
-                            isUser: true,
-                            playerName: friendName.substr(0, 13),
-                            playerScore: 0,
-                            turnOrder: 0,
-                            tempScore: "",
-                            history: "",
-                            color: friendColor
+                    if($scope.addFriend) {
+                        var time = new Date();
+                        //console.log("update time");
+                        play.time = time.toUTCString();
+                        play.ISOtime = time.toISOString();
+                        play.numberOfPlayers += 1;
+                        play.$save();
+                        var friend = $scope.addFriend;
+                        var friendColor = "";
+                        var friendName = "";
+                        var friendUserRef = new Firebase("https://pointi.firebaseio.com/users/" + friend.$id);
+                        friendUserRef.once('value', function(dataSnapshot) {
+                            //console.log("get user details");
+                            friendColor = dataSnapshot.child("details").child("favouriteColor").val();
+                            friendName = dataSnapshot.child("details").child("name").val();
+                            //console.log(friendColor);
+                            numberOfPlayers += 1;
+                            $scope.numberOfPlayers = numberOfPlayers;
+                            $scope.players.$add({
+                                userUid: friend.$id,
+                                isUser: true,
+                                playerName: friendName.substr(0, 13),
+                                playerScore: 0,
+                                turnOrder: 0,
+                                tempScore: "",
+                                history: "",
+                                color: friendColor
+                            });
+                            console.log(friendName + " added");
+                            var accessRef = new Firebase("https://pointi.firebaseio.com/play-access/" + friend.$id + "/" + play.$id);
+                            accessRef.set({
+                                time: time.toUTCString()
+                            });
+                            //console.log("added access record");
                         });
-                        console.log(friendName + " added");
-                        var accessRef = new Firebase("https://pointi.firebaseio.com/play-access/" + friend.$id + "/" + play.$id);
-                        accessRef.set({
-                            time: time.toUTCString()
-                        });
-                        //console.log("added access record");
-                    });
+                    }
                 }
                 $scope.addUserPlayer = function() {
                     var time = new Date();
@@ -428,6 +477,34 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     players.$save(player).then(function() {
                         // data has been saved to Firebase
                         console.log(" -> successful");
+                    });
+                }
+                $scope.removePlayer = function(player) {
+                    console.log("delete player: " + player.$id);
+                    players.$remove(player).then(function(ref) {
+                        if(player.isUser) {
+                            if(play.creatorUid == player.$id) {
+                                console.log("access remains, as player is creator");
+                            } else {
+                                console.log("user Uid: " + player.userUid);
+                                var accessRef = new Firebase("https://pointi.firebaseio.com/play-access/" + player.userUid + "/" + play.$id);
+                                accessRef.remove(function(error) {
+                                    if(error) {
+                                        console.log('remove failed, ' + error);
+                                    } else {
+                                        console.log('remove succeeded');
+                                    }
+                                });
+                            }
+                        }
+                        // data has been saved to Firebase
+                        play.numberOfPlayers -= 1;
+                        play.$save();
+                        console.log(" -> successful");
+                        //$window.location.href = "#/";
+                        //$window.location.reload();
+                    }, function(error) {
+                        console.log("Error:", error);
                     });
                 }
                 $scope.updateScore = function(player, update) {
@@ -484,7 +561,6 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
             var ref = new Firebase("https://pointi.firebaseio.com/play-access/" + $scope.user.uid);
             var availablePlays = $firebase(ref).$asArray();
             availablePlays.$loaded().then(function() {
-                $rootScope.loading = false;
                 //TODO: for each available play, load play data into array
                 var playsToShow = {};
                 var playCount = 0;
@@ -503,6 +579,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     });
                 });
                 ////////////////
+                $rootScope.loading = false;
                 $scope.playCount = playCount;
                 $scope.playsToShow = playsToShow;
                 //$scope.availablePlays = availablePlays;
@@ -525,12 +602,16 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     }).then(function(ref) {
                         var id = ref.key();
                         console.log("added record with id " + id);
-                        var accessRef = new Firebase("https://pointi.firebaseio.com/play-access/" + $scope.user.uid + "/" + id);
-                        accessRef.set({
+                        var accessRef = new Firebase("https://pointi.firebaseio.com/play-access/" + $scope.user.uid);
+                        accessRef.child(id).set({
                             time: time.toUTCString()
+                        }, function(error) {
+                            $window.location.href = "#/plays/" + id;
+                            if(error) {
+                                console.log("error: " + error);
+                            }
                         });
                         //console.log("added access record");
-                        $window.location.href = "#/score4/plays/" + id;
                     });
                 }
             });
