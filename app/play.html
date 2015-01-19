@@ -149,10 +149,11 @@
     <div ng-if="user">
         <div class="list-group" id='messagesList' content-for="chatSidebar">
             <div class="list-group-item">
-                Comments:
-                <div ng-click="toggle('rightSidebar')" class="btn btn-default pull-right">
-                    <i class="fa fa-arrow-right"></i>
+                <div ng-click="toggle('rightSidebar')" class="btn btn-default">
+                    <i class="fa fa-arrow-left"></i>
                 </div>
+                <span>
+                Comments:</span>
             </div>
             <div class="list-group-item text-center">
                 <div>
@@ -169,7 +170,7 @@
             
             <div content-for="navbarAction">
                 <div ng-click="toggle('rightSidebar')" class="btn btn-navbar">
-                    <span class="badge"><i ng-if="numberOfMessages">{{messages.length}}</i> <i class="fa fa-comments"></i></span>
+                    <span class="badge"><i>{{messages.length}}</i> <i class="fa fa-comments"></i></span> 
                 </div>
             </div>
         </div>

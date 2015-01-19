@@ -1,4 +1,4 @@
-var app = angular.module('MobileAngularUiExamples', ["ngRoute", "ngTouch", "mobile-angular-ui", "firebase", "googlechart"]);
+var app = angular.module('Pointi', ["ngRoute", "ngTouch", "mobile-angular-ui", "firebase", "googlechart"]);
 app.factory("Auth", ["$firebaseAuth",
     function($firebaseAuth) {
         var authRef = new Firebase("https://pointi.firebaseio.com/users");
