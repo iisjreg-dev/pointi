@@ -11,7 +11,7 @@
                     </div>
                 </div>
                 <div class="list-group-item">
-                        Previous games: 
+                        Games: 
                 </div>
                 <div ng-hide="playCount" class="list-group-item">
                     <div class="text-center">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="list-group-item" ng-repeat="play in playsToShow">
-                    <a href="#/plays/{{play.$id}}" class="text-capitalize">
+                    <a href="#/plays/{{play.$id}}/details" class="text-capitalize">
                     {{play.gameName}}<br />
                         <span class="btn btn-xs btn-default" disabled="disabled"><small>{{play.time}}</small></span>
                     <div class="pull-right">
