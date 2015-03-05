@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <base href="/app/" />
-    <title>Pointi</title>
+    <title>Pointi Scoreboard</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimal-ui" />
@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/spectrum/1.6.0/spectrum.min.css">
 </head>
 
-<body ng-app="Pointi" ng-controller="MainController">
+<body ng-app="Pointi-scoreboard" ng-controller="MainController">
 
     <!-- Sidebars -->
     <div ng-include="'sidebar.html'" class="sidebar sidebar-left" toggleable parent-active-class="sidebar-left-in" id="mainSidebar"></div>
@@ -40,7 +40,7 @@
 
         <div class="navbar navbar-app navbar-absolute-top">
             <div class="navbar-brand navbar-brand-center" yield-to="title">
-                <span>Pointi score keeping</span>
+                <span>Pointi Scoreboard (client view)</span>
             </div>
             <div class="btn-group pull-left">
                 <div ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle">
