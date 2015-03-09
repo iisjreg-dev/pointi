@@ -1,0 +1,98 @@
+<div class="scrollable" ng-controller="ScoreController3">
+    <div class="scrollable-content section">
+        <div ng-hide="user" class="text-center">
+            <a href="#overlay-login" toggle="on" class="btn btn-standard"><i class="fa fa-sign-in"></i> Sign in / Register</a>
+        </div>
+        <div ng-if="user">
+            <div ng-hide="numberOfPlayers">
+                <div class="panel panel-success">
+                    <div class="panel-body text-center">
+                        No Players!
+
+                    </div>
+                </div>
+            </div>
+            <!-- MAIN CONTENT -->
+            <div class="list-group-item text-center media container">
+                <div class="row">
+                    <div>
+                        <div class="btn-group" role="group">
+                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-xs btn-default" disabled="disabled">{{play.time}}</span> </h3>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div width="70%">
+
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-condensed table-hover">
+                            <tr>
+                                <th>
+                                    <h3 class="text-right">Position</h3>
+                                </th>
+                                <th>
+                                    <h3>Name</h3>
+                                </th>
+                                <th>
+                                    <h3>Score</h3>
+                                </th>
+                            </tr>
+                            <tr ng-repeat="player in players | orderBy:scoreBoardPredicate" class="phone-listing">
+                                <td>
+                                    <h3 class="text-right">{{$index + 1}} - </h3>
+                                </td>
+                                <td>
+                                    <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                </td>
+                                <td>
+
+                                    <h3><a class="btn btn-default btn-xl score-width-scoreboard" disabled="disabled">{{player.playerScore}}</a></h3>
+                                </td>
+
+                            </tr>
+                            <!-- end of player repeat -->
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- OVERLAYS -->
+
+    <div overlay="overlay-new-player">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                Add player
+            </div>
+            <div class="panel-body">
+                <p>
+                    <form class="form-inline" role="form" ng-submit="addPlayer()">
+                        <input type='text' ng-model='playerName' id='playerName' placeholder='Name (max 13 characters)' class="form-control" maxlength=13>
+                        <button type="submit" class="btn btn-info form-control" toggle="off" bubble target="overlay-new-player">Add new player</button>
+
+                    </form>
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- PAGE SPECIFIC CONTENT - TITLE/ACTION/SIDEBAR/FOOTER -->
+    <div content-for="title">
+        <span>Details</span>
+    </div>
+
+    <div content-for="footerBar">
+        <a ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle"><i class="fa fa-bars"></i></a>
+        <a class="btn btn-navbar">SCOREBOARD</a>
+
+    </div>
+
+</div>

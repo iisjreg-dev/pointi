@@ -1,10 +1,12 @@
-var app = angular.module('Pointi-scoreboard', ["ngRoute", "ngTouch", "mobile-angular-ui", "firebase", "googlechart"]);
+var app = angular.module('Pointi-scoreboard', ["ngRoute", "ngTouch", "mobile-angular-ui", "ngAnimate", "firebase", "googlechart"]);
+
 app.factory("Auth", ["$firebaseAuth",
     function($firebaseAuth) {
         var authRef = new Firebase("https://pointi-scoreboard.firebaseio.com/users");
         return $firebaseAuth(authRef);
     }
 ]);
+
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: "plays.html"
@@ -25,19 +27,17 @@ app.config(function($routeProvider, $locationProvider) {
         templateUrl: "delete-play.html"
         //params.playID
     });
+    $routeProvider.when('/plays/:playID/scoreboard', {
+        templateUrl: "scoreboard.html"
+        //params.playID
+    });
     $routeProvider.when('/plays/:playID/edit/:playerID', {
         templateUrl: "edit-player.html"
         //params.playID
     });
 });
 
-app.controller('UserController', function($rootScope, $scope, $firebase, $location) {
-    //USER TESTING
-    //CREATE A FIREBASE REFERENCE
-    //var usersRef = new Firebase("https://pointi-scoreboard.firebaseio.com/users/" + $scope.auth.uid);
-    //var user = $firebase(usersRef).$asObject();
-    //$scope.user = user;
-});
+
 app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
     //EDITING PLAYER IN A GAME
     $rootScope.loading = true;
@@ -141,6 +141,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 //console.log(players.length + " players in play");
                 var numberOfPlayers = players.length;
                 $scope.scorePredicate = "playerName";
+                $scope.scoreBoardPredicate = "-playerScore";
                 $scope.chatPredicate = '-ISOtime';
                 $scope.numberOfPlayers = numberOfPlayers;
                 $scope.players = players;
@@ -295,7 +296,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                         accessRef.child(id).set({
                             time: time.toUTCString()
                         }, function(error) {
-                            $window.location.href = "#/plays/" + id;
+                            $window.location.href = "#/plays/" + id + "/details";
                             if(error) {
                                 console.log("error: " + error);
                             }

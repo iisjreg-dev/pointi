@@ -90,3 +90,56 @@ h1 {
 .carousel-inner>.item.active + .item {
   z-index: 1999;
 }
+
+.name-width{
+    width: 120px;
+    display: inline-block;
+}
+
+.score-width{
+    width: 50px;
+    display: inline-block;
+}
+.name-width-scoreboard{
+    width: 400px;
+    display: inline-block;
+}
+
+.score-width-scoreboard{
+    width: 100px;
+    display: inline-block;
+}
+
+.phone-listing.ng-enter,
+.phone-listing.ng-leave,
+.phone-listing.ng-move {
+  -webkit-transition: 0.5s linear all;
+  -moz-transition: 0.5s linear all;
+  -o-transition: 0.5s linear all;
+  transition: 0.5s linear all;
+}
+
+.phone-listing.ng-enter,
+.phone-listing.ng-move {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.phone-listing.ng-move.ng-move-active,
+.phone-listing.ng-enter.ng-enter-active {
+  opacity: 1;
+    background: #cccccc;
+}
+
+.phone-listing.ng-leave {
+  opacity: 1;
+  overflow: hidden;
+}
+
+.phone-listing.ng-leave.ng-leave-active {
+  opacity: 0;
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
