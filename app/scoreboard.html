@@ -1,8 +1,5 @@
 <div class="scrollable" ng-controller="ScoreController3">
     <div class="scrollable-content section">
-        <div ng-hide="user" class="text-center">
-            <a href="#overlay-login" toggle="on" class="btn btn-standard"><i class="fa fa-sign-in"></i> Sign in / Register</a>
-        </div>
         <div ng-if="user">
             <div ng-hide="numberOfPlayers">
                 <div class="panel panel-success">
@@ -13,38 +10,81 @@
                 </div>
             </div>
             <!-- MAIN CONTENT -->
-            <div class="list-group-item text-center media container">
+            <div class="container fluid">
+                <!-- <div class="btn-group" role="group">
+                    <a ng-click="setColumns(1)" class="btn">1</a>
+                    <a ng-click="setColumns(2)" class="btn">2</a>
+                    <a ng-click="setColumns(3)" class="btn">3</a>
+                </div> -->
                 <div class="row">
                     <div>
-                        <div class="btn-group" role="group">
-                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-xs btn-default" disabled="disabled">{{play.time}}</span> </h3>
+                        <div class="text-center">
+                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-default" disabled="disabled">{{play.time}}</span> </h3>
                         </div>
                     </div>
-
                 </div>
+                <div class="row">
+                    <!-- <div id="column1" class="col-xs-12 col-md-4"> -->
+                    <div id="column1" ng-class="columnStyle1">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:0:9" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 1}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
 
-            </div>
-            <div width="70%">
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
 
-
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <table class="table table-condensed table-hover">
-                            <tr ng-repeat="player in players | orderBy:scoreBoardPredicate" class="phone-listing">
-                                <td>
-                                    <h3 class="text-right">{{$index + 1}} - </h3>
-                                </td>
-                                <td>
-                                    <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
-                                </td>
-                                <td>
-
-                                    <h2><a class="btn btn-default btn-xl score-width-scoreboard" disabled="disabled">{{player.playerScore}}</a></h2>
-                                </td>
-
-                            </tr>
-                            <!-- end of player repeat -->
-                        </table>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="column2" class="col-xs-12 col-md-4"> -->
+                    <div id="column2" ng-class="columnStyle2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:10:19" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 11}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="column3" class="col-xs-12 col-md-4"> -->
+                    <div id="column3" ng-class="columnStyle3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:20:29" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 21}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,37 +92,4 @@
 
 
     </div>
-
-    <!-- OVERLAYS -->
-
-    <div overlay="overlay-new-player">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                Add player
-            </div>
-            <div class="panel-body">
-                <p>
-                    <form class="form-inline" role="form" ng-submit="addPlayer()">
-                        <input type='text' ng-model='playerName' id='playerName' placeholder='Name (max 13 characters)' class="form-control" maxlength=13>
-                        <button type="submit" class="btn btn-info form-control" toggle="off" bubble target="overlay-new-player">Add new player</button>
-
-                    </form>
-                </p>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- PAGE SPECIFIC CONTENT - TITLE/ACTION/SIDEBAR/FOOTER -->
-    <div content-for="title">
-        <span>Details</span>
-    </div>
-
-    <div content-for="footerBar">
-        <a ng-click="toggle('mainSidebar')" class="btn btn-navbar sidebar-toggle"><i class="fa fa-bars"></i></a>
-        <a class="btn btn-success" href="scoreboard-index.html#/plays/-Jjq4axaFojTHKG7gKvY/scoreboard2"><i class="fa fa-desktop fa-fw"></i></a>
-        <a class="btn btn-navbar"><i class="fa fa-twitter"></i> @HugsNUppercuts</a>
-
-    </div>
-
 </div>

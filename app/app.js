@@ -29,13 +29,9 @@ app.config(function($routeProvider, $locationProvider) {
         templateUrl: "scoreboard.html"
         //params.playID
     });
-    $routeProvider.when('/plays/:playID/scoreboard2', {
-        templateUrl: "scoreboard2.html"
-        //params.playID
-    });
     $routeProvider.when('/plays/:playID/edit/:playerID', {
         templateUrl: "edit-player.html"
-        //params.playID
+        //params.playID & params.playerID
     });
 });
 app.filter('displayPart', function() {
