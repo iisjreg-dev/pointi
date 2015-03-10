@@ -1,12 +1,10 @@
 var app = angular.module('Pointi-scoreboard', ["ngRoute", "ngTouch", "mobile-angular-ui", "ngAnimate", "firebase", "googlechart"]);
-
 app.factory("Auth", ["$firebaseAuth",
     function($firebaseAuth) {
         var authRef = new Firebase("https://pointi-scoreboard.firebaseio.com/users");
         return $firebaseAuth(authRef);
     }
 ]);
-
 app.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', {
         templateUrl: "plays.html"
@@ -40,17 +38,20 @@ app.config(function($routeProvider, $locationProvider) {
         //params.playID
     });
 });
-app.filter('displayPart', function(){
-    return function(data, start, end){
-        var filtered=[];
-        for(var i=0;i<data.length;i++){
-                if(i>=start && i <= end)
-                    filtered.push(data[i]);
-        }
+app.filter('displayPart', function() {
+    return function(data, start, end) {
+        var filtered = [];
+        //for(var i = 0; i < data.length; i++) {
+        //    if(i >= start && i <= end) filtered.push(data[i]);
+        //}
+        var i = 0;
+        angular.forEach(data, function() {
+            if(i >= start && i <= end) filtered.push(data[i]);
+            i++;
+        });
         return filtered;
     }
 });
-
 app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
     //EDITING PLAYER IN A GAME
     $rootScope.loading = true;
@@ -143,7 +144,6 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
             //PLAYERS REF
             var playerRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID + "/players");
             var players = $firebase(playerRef).$asArray();
-            
             //chatRef.on("child_added", function(snapshot) {
             //    messages = $firebase(chatRef).$asArray();
             //    $scope.messages = messages;
@@ -158,9 +158,67 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 $scope.chatPredicate = '-ISOtime';
                 $scope.numberOfPlayers = numberOfPlayers;
                 $scope.players = players;
+                $scope.columnStyle1 = "";
+                $scope.columnStyle2 = "";
+                $scope.columnStyle3 = "";
+
+                function checkColumns() {
+                    var newNumberOfPlayers;
+                    playRef.child("numberOfPlayers").once("value", function(data) {
+                        newNumberOfPlayers = data.val();
+                    });
+                    var numberOfColumns = Math.ceil(newNumberOfPlayers / 10);
+                    console.log("players: " + newNumberOfPlayers + ", columns: " + numberOfColumns)
+                    var styles1 = []; //column 1
+                    var styles2 = []; //column 2
+                    var styles3 = []; //column 3
+                    styles1[1] = "col-xs-12 col-md-6 col-md-offset-3";
+                    styles2[1] = "hidden";
+                    styles3[1] = "hidden";
+                    styles1[2] = "col-xs-12 col-md-5 col-md-offset-1";
+                    styles2[2] = "col-xs-12 col-md-5 col-md-offset-1";
+                    styles3[2] = "hidden";
+                    styles1[3] = "col-xs-12 col-md-4";
+                    styles2[3] = "col-xs-12 col-md-4";
+                    styles3[3] = "col-xs-12 col-md-4";
+                    $scope.columnStyle1 = styles1[numberOfColumns];
+                    $scope.columnStyle2 = styles2[numberOfColumns];
+                    $scope.columnStyle3 = styles3[numberOfColumns];
+                    //console.log("style1: " + styles1[numberOfColumns]);
+                    //console.log("style2: " + styles2[numberOfColumns]);
+                    //console.log("style3: " + styles3[numberOfColumns]);
+                }
+                checkColumns();
+                
+                players.$watch(function(event) {
+                    //var styleTimer = setTimeout(function(){ checkColumns(); }, 3000);    
+                    checkColumns();
+                });
                 //
                 //functions
                 //
+                $scope.setColumns = function(num) { //temp function to test force changing styles
+                    var numberOfColumns2 = num; 
+                    console.log("players: " + numberOfPlayers + ", columns: " + numberOfColumns2)
+                    var styles1 = []; //column 1
+                    var styles2 = []; //column 2
+                    var styles3 = []; //column 3
+                    styles1[1] = "col-xs-12 col-md-6 col-md-offset-3";
+                    styles2[1] = "hidden";
+                    styles3[1] = "hidden";
+                    styles1[2] = "col-xs-12 col-md-5 col-md-offset-1";
+                    styles2[2] = "col-xs-12 col-md-5 col-md-offset-1";
+                    styles3[2] = "hidden";
+                    styles1[3] = "col-xs-12 col-md-4";
+                    styles2[3] = "col-xs-12 col-md-4";
+                    styles3[3] = "col-xs-12 col-md-4";
+                    $scope.columnStyle1 = styles1[numberOfColumns2];
+                    $scope.columnStyle2 = styles2[numberOfColumns2];
+                    $scope.columnStyle3 = styles3[numberOfColumns2];
+                    //console.log("style1: " + styles1[numberOfColumns2]);
+                    //console.log("style2: " + styles2[numberOfColumns2]);
+                    //console.log("style3: " + styles3[numberOfColumns2]);
+                }
                 $scope.addPlayer = function() {
                     var time = new Date();
                     //console.log("update time");
@@ -168,7 +226,6 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     play.ISOtime = time.toISOString();
                     play.numberOfPlayers += 1;
                     play.$save();
-                    
                     numberOfPlayers += 1;
                     $scope.numberOfPlayers = numberOfPlayers;
                     var playerName = $scope.playerName || 'anonymous';
@@ -500,5 +557,4 @@ app.controller('MainController', function($rootScope, $scope, $firebase, $window
             console.error("Error: ", error);
         });
     }
-
 });

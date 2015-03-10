@@ -10,70 +10,80 @@
                 </div>
             </div>
             <!-- MAIN CONTENT -->
-            <div class="row">
-                <div>
-                    <div class="text-center">
-                        <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-default" disabled="disabled">{{play.time}}</span> </h3>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12 col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <table class="table table-condensed table-hover">
-                                <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:0:9" class="phone-listing">
-                                    <td>
-                                        <h3 class="text-right">{{$index + 1}} - </h3>
-                                    </td>
-                                    <td>
-                                        <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
-                                    </td>
-                                    <td>
-
-                                        <h3>{{player.playerScore}}</h3>
-                                    </td>
-
-                                </tr>
-                            </table>
+            <div class="container fluid">
+                <!-- <div class="btn-group" role="group">
+                    <a ng-click="setColumns(1)" class="btn">1</a>
+                    <a ng-click="setColumns(2)" class="btn">2</a>
+                    <a ng-click="setColumns(3)" class="btn">3</a>
+                </div> -->
+                <div class="row">
+                    <div>
+                        <div class="text-center">
+                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-default" disabled="disabled">{{play.time}}</span> </h3>
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <table class="table table-condensed table-hover">
-                                <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:10:19" class="phone-listing">
-                                    <td>
-                                        <h3 class="text-right">{{$index + 11}} - </h3>
-                                    </td>
-                                    <td>
-                                        <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
-                                    </td>
-                                    <td>
-                                        <h3>{{player.playerScore}}</h3>
-                                    </td>
-                                </tr>
-                            </table>
+                <div class="row">
+                    <!-- <div id="column1" class="col-xs-12 col-md-4"> -->
+                    <div id="column1" ng-class="columnStyle1">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:0:9" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 1}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
+
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
+
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xs-12 col-md-4">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <table class="table table-condensed table-hover">
-                                <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:20:29" class="phone-listing">
-                                    <td>
-                                        <h3 class="text-right">{{$index + 21}} - </h3>
-                                    </td>
-                                    <td>
-                                        <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
-                                    </td>
-                                    <td>
-                                        <h3>{{player.playerScore}}</h3>
-                                    </td>
-                                </tr>
-                            </table>
+                    <!-- <div id="column2" class="col-xs-12 col-md-4"> -->
+                    <div id="column2" ng-class="columnStyle2">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:10:19" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 11}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div id="column3" class="col-xs-12 col-md-4"> -->
+                    <div id="column3" ng-class="columnStyle3">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <table class="table table-condensed table-hover">
+                                    <tr ng-repeat="player in players | orderBy:scoreBoardPredicate | displayPart:20:29" class="phone-listing">
+                                        <td>
+                                            <h3 class="text-right">{{$index + 21}} - </h3>
+                                        </td>
+                                        <td>
+                                            <h3><span class="text-capitalize"> {{player.playerName}}</span></h3>
+                                        </td>
+                                        <td>
+                                            <h3>{{player.playerScore}}</h3>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
