@@ -31,12 +31,25 @@ app.config(function($routeProvider, $locationProvider) {
         templateUrl: "scoreboard.html"
         //params.playID
     });
+    $routeProvider.when('/plays/:playID/scoreboard2', {
+        templateUrl: "scoreboard2.html"
+        //params.playID
+    });
     $routeProvider.when('/plays/:playID/edit/:playerID', {
         templateUrl: "edit-player.html"
         //params.playID
     });
 });
-
+app.filter('displayPart', function(){
+    return function(data, start, end){
+        var filtered=[];
+        for(var i=0;i<data.length;i++){
+                if(i>=start && i <= end)
+                    filtered.push(data[i]);
+        }
+        return filtered;
+    }
+});
 
 app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
     //EDITING PLAYER IN A GAME

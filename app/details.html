@@ -37,19 +37,20 @@
 
             <div class="list-group-item media container" ng-repeat="player in players | orderBy:scorePredicate:reverse">
                 <div class="row">
-                        &nbsp;&nbsp;&nbsp;<div class="btn-group" role="group">
-                            <a class="btn btn-default name-width" disabled="disabled"><strong class="text-capitalize"> {{player.playerName}}</strong>
+                    &nbsp;&nbsp;&nbsp;
+                    <div class="btn-group" role="group">
+                        <a class="btn btn-default name-width" disabled="disabled"><strong class="text-capitalize"> {{player.playerName}}</strong>
                             </a>
-                            <a class="btn btn-primary score-width" disabled="disabled">
+                        <a class="btn btn-primary score-width" disabled="disabled">
                                 {{player.playerScore}}&nbsp;&nbsp;<sup><i class="badge">{{player.tempScore}}</i></sup>
                             </a>
-                        </div>
-                        <div class="btn-group pull-right" role="group">
-                            <a class="btn btn-default" href="#overlay-{{player.$id}}" toggle="on"><i class="fa fa-plus-circle fa-fw"></i></a>
-                            <a class="btn btn-default" href="#/plays/{{play.$id}}/edit/{{player.$id}}"><i class="fa fa-edit fa-fw"></i></a>
-                            <a class="btn btn-default" href="#overlay-confirm-del-{{player.$id}}" toggle="on"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="btn-group pull-right" role="group">
+                        <a class="btn btn-default" href="#overlay-{{player.$id}}" toggle="on"><i class="fa fa-plus-circle fa-fw"></i></a>
+                        <a class="btn btn-default" href="#/plays/{{play.$id}}/edit/{{player.$id}}"><i class="fa fa-edit fa-fw"></i></a>
+                        <a class="btn btn-default" href="#overlay-confirm-del-{{player.$id}}" toggle="on"><i class="fa fa-trash"></i></a>&nbsp;&nbsp;&nbsp;
 
-                        </div>
+                    </div>
                 </div>
                 <div overlay="overlay-confirm-del-{{player.$id}}">
                     <h4 class="overlay-title">Are you sure you want to remove {{player.playerName}}?</h4>
@@ -76,6 +77,21 @@
                             <button class="btn btn-danger" ng-click="updateScore(player,-1)"><i class="fa fa-minus-square-o fa-fw"></i>1</button>
                             <button class="btn btn-danger" ng-click="updateScore(player,-5)"><i class="fa fa-minus-square-o fa-fw"></i>5</button>
                             <button class="btn btn-danger" ng-click="updateScore(player,-10)"><i class="fa fa-minus-square-o fa-fw"></i>10</button>
+                        </div>
+                    </p>
+                    <p>
+                        <div class="btn-group toggleable-dropdown" active-class="open" id="myDropdown" toggleable>
+                            <button type="button" class="btn btn-info dropdown-toggle" toggle target="myDropdown">
+                                Add badge <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu list-group" role="menu" toggle="off" bubble target="myDropdown">
+                                <li class="list-group-item"><a href>Happy</a>
+                                </li>
+                                <li class="list-group-item"><a href>Volunteer</a>
+                                </li>
+                                <li class="list-group-item"><a href>Extreme</a>
+                                </li>
+                            </ul>
                         </div>
                     </p>
                 </div>

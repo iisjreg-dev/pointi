@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Pointi Scoreboard Display</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon" />
+    <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="demo.css" />
+    <script src="/bower_components/jquery/dist/jquery.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-touch.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.15/angular-animate.min.js"></script>
+    <script src="/plugins/mobile-angular-ui/js/mobile-angular-ui.min.js"></script>
+    <script src="/plugins/ng-google-chart.js"></script>
+    <script src="https://cdn.firebase.com/js/client/2.0.6/firebase.js"></script>
+    <script src="https://cdn.firebase.com/libs/angularfire/0.9.0/angularfire.min.js"></script>
+    <script src="app.js"></script>
+
+</head>
+
+<body ng-app="Pointi-scoreboard" ng-controller="MainController">
+    <div class="app">
+        <!-- App Body -->
+        <div class="app-body" ng-class="{loading: loading}">
+            <div ng-show="loading" class="app-content-loading">
+                <i class="fa fa-child fa-spin loading-spinner"></i>
+            </div>
+
+            <ng-view class="app-content" ng-hide="loading"></ng-view>
+        </div>
+
+    </div>
+    <!-- ~ .app -->
+
+</body>
+
+</html>
