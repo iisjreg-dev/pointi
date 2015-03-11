@@ -34,12 +34,9 @@ app.config(function($routeProvider, $locationProvider) {
         //params.playID & params.playerID
     });
 });
-app.filter('displayPart', function() {
+app.filter('displayPart', function() { //custom 'pagination' filter, used to seperate scorebaord into 3 columns
     return function(data, start, end) {
         var filtered = [];
-        //for(var i = 0; i < data.length; i++) {
-        //    if(i >= start && i <= end) filtered.push(data[i]);
-        //}
         var i = 0;
         angular.forEach(data, function() {
             if(i >= start && i <= end) filtered.push(data[i]);
@@ -51,26 +48,20 @@ app.filter('displayPart', function() {
 app.controller('PlayerController', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
     //EDITING PLAYER IN A GAME
     $rootScope.loading = true;
-    //var timer = [];
     var params = $routeParams;
     if($scope.user) {
         if(params.playID) {
             if(params.playerID) {
-                console.log("1. player update");
                 var playRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID);
                 var playerRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID + "/players/" + params.playerID);
                 var play = $firebase(playRef).$asObject();
                 var player = $firebase(playerRef).$asObject();
                 $rootScope.loading = false;
-                //var scores = scoresSync.$asObject();
-                //scores.$bindTo($scope, "scores");
                 $scope.play = play;
                 $scope.player = player;
                 //$scope.player.playerNameTitle = player.playername;
                 $scope.updatePlayer = function() {
-                    console.log("2. player updated");
-                    //scores.p1Score = p1Score;
-                    //scores.p2Score = p2Score;
+                    console.log("player updated");
                     player.$save();
                     $window.history.go(-1);
                 }
@@ -88,22 +79,18 @@ app.controller('DeletePlayController', function($rootScope, $scope, $firebase, $
         if(playID) {
             console.log("params.playID: " + playID);
             var playRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + playID);
-            //var play = $firebase(playRef).$asObject();
             $scope.deletePlay = function() {
-                //console.log("delete play id: " + play.$id);
+                //FIRST REMOVE PLAY RECORD
                 playRef.remove(function(error) {
                     if(error) {
                         console.log("error: " + error)
                     }
-                    // data has been saved to Firebase
                     var accessRef = new Firebase("https://pointi-scoreboard.firebaseio.com/play-access");
                     accessRef.once('value', function(dataSnapshot) {
-                        dataSnapshot.forEach(function(childSnapshot) {
-                            //CHECK EACH ACCESS RECORD
+                        dataSnapshot.forEach(function(childSnapshot) { //CHECK EACH ACCESS RECORD
                             var user = childSnapshot.key();
-                            //console.log(id.ref());
                             if(childSnapshot.child(playID).exists()) {
-                                var deleteRef = childSnapshot.child(playID).ref();
+                                var deleteRef = childSnapshot.child(playID).ref(); //THEN REMOVE ACCESS RECORDS
                                 deleteRef.remove(function(error) {
                                     console.log("access record removed for: " + user);
                                 });
@@ -121,40 +108,28 @@ app.controller('DeletePlayController', function($rootScope, $scope, $firebase, $
     }
 });
 app.controller('ScoreController3', function($rootScope, $scope, $firebase, $routeParams, $location, $window) {
-    //SCORE TESTING - n Players
-    //
-    //add score history & plays (instances of a game)
-    //
-    //
     $rootScope.loading = true;
-    var timer = [];
+    var timer = []; //ARRAY OF TIMERS - 1 PER PLAYER
     var params = $routeParams;
     if($scope.user) {
-        if(params.playID) {
-            //show individual play
+        if(params.playID) { //show individual play
             console.log("playID = " + params.playID);
-            //PLAY REF
+            //PLAY
             var playRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID);
             var play = $firebase(playRef).$asObject();
             $scope.play = play;
-            //PLAYERS REF
+            //PLAYERS
             var playerRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID + "/players");
             var players = $firebase(playerRef).$asArray();
-            //chatRef.on("child_added", function(snapshot) {
-            //    messages = $firebase(chatRef).$asArray();
-            //    $scope.messages = messages;
-            //    $scope.numberOfMessages = messages.length;
-            //});
             players.$loaded().then(function() {
                 $rootScope.loading = false;
-                //console.log(players.length + " players in play");
+                $scope.players = players;
                 var numberOfPlayers = players.length;
+                $scope.numberOfPlayers = numberOfPlayers;
                 $scope.scorePredicate = "playerName";
                 $scope.scoreBoardPredicate = "-playerScore";
                 $scope.chatPredicate = '-ISOtime';
-                $scope.numberOfPlayers = numberOfPlayers;
-                $scope.players = players;
-                $scope.columnStyle1 = "";
+                $scope.columnStyle1 = ""; //DYNAMIC STYLES FOR 1, 2 OR 3 COLUMNS
                 $scope.columnStyle2 = "";
                 $scope.columnStyle3 = "";
 
@@ -162,33 +137,34 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     var newNumberOfPlayers;
                     playRef.child("numberOfPlayers").once("value", function(data) {
                         newNumberOfPlayers = data.val();
-                    });
-                    var numberOfColumns = Math.ceil(newNumberOfPlayers / 10);
-                    console.log("players: " + newNumberOfPlayers + ", columns: " + numberOfColumns)
-                    var styles1 = []; //column 1
-                    var styles2 = []; //column 2
-                    var styles3 = []; //column 3
+                    }); //CHECK REFERENCE DIRECTLY BECAUSE $scope.numberOfPlayers WILL BE OUT OF DATE
+                    
+                    var numberOfColumns = Math.ceil(newNumberOfPlayers / 10); //10 PER COLUMN
+                    //THIS COULD PROBABLY BE DONE NEATER
+                    var styles1 = []; //column #1
+                    var styles2 = []; //column #2
+                    var styles3 = []; //column #3
+                    //1 column layout
                     styles1[1] = "col-xs-12 col-md-6 col-md-offset-3";
                     styles2[1] = "hidden";
                     styles3[1] = "hidden";
+                    //2 column layout
                     styles1[2] = "col-xs-12 col-md-5 col-md-offset-1";
                     styles2[2] = "col-xs-12 col-md-5 col-md-offset-1";
                     styles3[2] = "hidden";
+                    //3 column layout
                     styles1[3] = "col-xs-12 col-md-4";
                     styles2[3] = "col-xs-12 col-md-4";
                     styles3[3] = "col-xs-12 col-md-4";
                     $scope.columnStyle1 = styles1[numberOfColumns];
                     $scope.columnStyle2 = styles2[numberOfColumns];
                     $scope.columnStyle3 = styles3[numberOfColumns];
-                    //console.log("style1: " + styles1[numberOfColumns]);
-                    //console.log("style2: " + styles2[numberOfColumns]);
-                    //console.log("style3: " + styles3[numberOfColumns]);
                 }
-                checkColumns();
+                
+                checkColumns(); //CHECK COLUMNS ON LOAD
                 
                 players.$watch(function(event) {
-                    //var styleTimer = setTimeout(function(){ checkColumns(); }, 3000);    
-                    checkColumns();
+                    checkColumns(); //CHECK COLUMNS EVERY TIME PLAYERS ARE ADDED OR REMOVED
                 });
                 //
                 //functions
@@ -196,17 +172,15 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
 
                 $scope.addPlayer = function() {
                     var time = new Date();
-                    //console.log("update time");
                     play.time = time.toUTCString();
                     play.ISOtime = time.toISOString();
                     play.numberOfPlayers += 1;
-                    play.$save();
-                    numberOfPlayers += 1;
-                    $scope.numberOfPlayers = numberOfPlayers;
-                    var playerName = $scope.playerName || 'anonymous';
-                    //console.log(playerName);
+                    play.$save(); //SHOULD PROBABLY GO IN A PROMISE AFTER ACTUALLY ADDING THE PLAYER vvv
+                    numberOfPlayers += 1; //WHY?
+                    $scope.numberOfPlayers = numberOfPlayers; //^^^ REDUNDANT CAT IS REDUNDANT?
+                    var playerName = $scope.playerName || 'anonymous'; //SHOULDN'T BE USED - SHOULD HANDLE BLANK FORM BETTER
                     $scope.players.$add({
-                        playerName: playerName.substr(0, 13),
+                        playerName: playerName.substr(0, 13), //LIMIT TO 13 CHARACTER NAMES
                         playerScore: 0,
                         turnOrder: 0,
                         tempScore: "",
@@ -215,76 +189,57 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                     });
                     $scope.playerName = "";
                 }
+                
                 $scope.removePlayer = function(player) {
                     console.log("delete player: " + player.$id);
                     players.$remove(player).then(function(ref) {
-                        if(player.isUser) {
-                            if(play.creatorUid == player.$id) {
-                                console.log("access remains, as player is creator");
-                            } else {
-                                console.log("user Uid: " + player.userUid);
-                                var accessRef = new Firebase("https://pointi-scoreboard.firebaseio.com/play-access/" + player.userUid + "/" + play.$id);
-                                accessRef.remove(function(error) {
-                                    if(error) {
-                                        console.log('remove failed, ' + error);
-                                    } else {
-                                        console.log('remove succeeded');
-                                    }
-                                });
-                            }
-                        }
-                        // data has been saved to Firebase
                         play.numberOfPlayers -= 1;
                         play.$save();
                         console.log(" -> successful");
-                        //$window.location.href = "#/";
-                        //$window.location.reload();
                     }, function(error) {
                         console.log("Error:", error);
                     });
                 }
+                
                 $scope.updateScore = function(player, update) {
                     var playerNum = players.$indexFor(player.$id);
-                    clearTimeout(timer[playerNum]); //ONE TIMER PER PLAYER
+                    clearTimeout(timer[playerNum]); //RESET TIMER FOR THIS PLAYER
                     player.tempScore = Number(player.tempScore) + update;
                     wait(playerNum, function() {
                         finalupdate(player, playerNum, player.tempScore);
                         player.tempScore = "";
                         players.$save(player);
-                    }, 2000);
+                    }, 2000); //WAIT 2 SECONDS BEFORE UPDATING
                 }
 
                 function wait(ref, func, time) {
-                    timer[ref] = setTimeout(func, time);
+                    timer[ref] = setTimeout(func, time); //SEPERATING THE FUNCTIONS SEEMED TO MAKE IT WORK?
                 }
 
                 function finalupdate(player, playerNum, update) {
                     $rootScope.toggle('overlay-' + player.$id, 'off');
                     var time = new Date();
-                    //console.log("update time");
                     play.time = time.toUTCString();
-                    play.ISOtime = time.toISOString();
+                    play.ISOtime = time.toISOString(); //BOTH WERE SAVED WHILE I WORKED OUT DATE FORMATS, BUT FILTERS ARE NOW EMPLOYED ON THE ISO TIME
                     play.$save();
                     var newScore = player.playerScore + Number(update);
                     console.log(player.playerName + " scored " + update + " = " + newScore);
                     player.playerScore = newScore;
                     var maxHistory = 16;
                     var newHistory = update.toString();
-                    if(player.history.length > 0) {
+                    if(player.history.length > 0) { //NOT NEEDED ON SCOREBOARD?
                         newHistory = newHistory + ", " + player.history;
                     }
                     if(player.history.length >= maxHistory) {
                         newHistory = newHistory.substr(0, maxHistory).concat("...");
                     }
                     player.history = newHistory;
-                    //console.log(player.history);
                     players.$save(player).then(function() {
-                        // data has been saved to Firebase
                         console.log(" -> successful");
-                        clearTimeout(timer[playerNum]);
+                        clearTimeout(timer[playerNum]); //CLEAR ANY LINGERING TIMER
                         var time = new Date();
                         var playerScoreRef = playerRef.child(player.$id + "/scores");
-                        playerScoreRef.push({
+                        playerScoreRef.push({ //TO BE USED FOR GRAPHS? NOT USED IN SCOREBOARD, YET
                             score: newScore,
                             time: time.toUTCString()
                         });
@@ -292,64 +247,46 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 }
                 
                 $scope.updateStars = function(player, update) {
-                    //var playerNum = players.$indexFor(player.$id);
-                    //$rootScope.toggle('overlay-' + player.$id, 'off');
-                    
                     var time = new Date();
-                    //console.log("update time");
                     play.time = time.toUTCString();
                     play.ISOtime = time.toISOString();
                     play.$save();
                     var newScore = player.stars + Number(update);
                     if(newScore>3) newScore = 3;
                     if(newScore<0) newScore = 0;
-                    //console.log(player.playerName + " scored " + update + " = " + newScore);
                     player.stars = newScore;                    
                     players.$save(player).then(function() {
-                        // data has been saved to Firebase
                         console.log(" -> successful");
                     });
-                    
                 }
+                
             });
-        } else {
-            //show all plays
+        } else {  //show all plays
             console.log("list games");
             var ref = new Firebase("https://pointi-scoreboard.firebaseio.com/play-access/" + $scope.user.uid);
             var availablePlays = $firebase(ref).$asArray();
             availablePlays.$loaded().then(function() {
-                //TODO: for each available play, load play data into array
-                var playsToShow = {};
+                var playsToShow = {}; //FOR EACH ACCESS RECORD, LOAD PLAY DATA INTO NEW ARRAY
                 var playCount = 0;
-                /////////////////
                 ref.once('value', function(dataSnapshot) {
                     dataSnapshot.forEach(function(childSnapshot) {
-                        //EACH PLAY
                         var playId = childSnapshot.key();
-                        //console.log("playId: " + playId);
                         var playRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + playId);
                         var sync = $firebase(playRef);
                         var playSync = sync.$asObject();
                         playsToShow[playCount] = playSync;
                         playCount += 1;
-                        //console.log("playCount: " + playCount);
                     });
+                    $rootScope.loading = false;
                 });
-                ////////////////
-                $rootScope.loading = false;
                 $scope.playCount = playCount;
                 $scope.playsToShow = playsToShow;
-                //$scope.availablePlays = availablePlays;
+                
                 $scope.addPlay = function() {
-                    //numberOfPlays += 1;
                     var playsRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/");
                     var plays = $firebase(playsRef).$asArray();
                     var gameName = $scope.gameName || 'anonymous';
                     var time = new Date();
-                    //ADD TO FIREBASE
-                    //console.log(gameName);
-                    //console.log(time);
-                    //console.log($scope.user.uid);
                     plays.$add({
                         gameName: gameName,
                         creatorUid: $scope.user.uid,
@@ -361,125 +298,23 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                         console.log("added record with id " + id);
                         var accessRef = new Firebase("https://pointi-scoreboard.firebaseio.com/play-access/" + $scope.user.uid);
                         accessRef.child(id).set({
-                            time: time.toUTCString()
+                            time: time.toUTCString() //CREATE ACCESS RECORD WITH NEW PLAY $id AS KEY, DATE IS NOT NECESSARY BUT USEFUL FOR SEEING CREATION DATE
                         }, function(error) {
-                            $window.location.href = "#/plays/" + id + "/details";
+                            $window.location.href = "#/plays/" + id + "/details"; //LOAD PLAY AFTER CREATING
                             if(error) {
                                 console.log("error: " + error);
                             }
                         });
-                        //console.log("added access record");
                     });
                 }
+                
             });
         }
     } else {
         $rootScope.loading = false;
     }
 });
-app.controller('historyController', function($rootScope, $scope, $firebase, $routeParams) {
-    //history TESTING
-    //
-    //var timer = [];
-    var params = $routeParams;
-    if(params.playID) {
-        var testdata = new google.visualization.DataTable();
-        //show individual play
-        console.log("params playID = " + params.playID);
-        var playRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID);
-        var play = $firebase(playRef).$asObject();
-        //play.$bindTo($scope, "play");
-        $scope.play = play;
-        var playerRef = new Firebase("https://pointi-scoreboard.firebaseio.com/plays/" + params.playID + "/players");
-        var players = $firebase(playerRef).$asArray();
-        players.$loaded().then(function() {
-            console.log(players.length + " players in play");
-            var numberOfPlayers = players.length;
-            playerRef.on("child_removed", function(snapshot) {
-                var deletedPost = snapshot.val();
-                console.log("Player '" + deletedPost.playerName + "' has been deleted");
-                numberOfPlayers -= 1;
-            });
-            $scope.predicate = "-playerScore";
-            $scope.numberOfPlayers = numberOfPlayers;
-            $scope.players = players;
-            var chart1 = {};
-            chart1.type = "LineChart";
-            chart1.cssStyle = "width:100%";
-            //
-            //
-            //
-            //TODO convert data!
-            //
-            //
-            //
-            //
-            // Declare columns
-            testdata.addColumn('string', 'Score datetime');
-            testdata.addColumn('number', 'score');
-            testdata.addColumn('number', 'score 2');
-            //
-            //column per player
-            //
-            //for(var x in players) {
-            //if(players[x].playerName) {
-            //console.log(x + "/ " + players[x].playerName);
-            //Add data.
-            //
-            //test:
-            var data1a = new Date("Thu, 11 Dec 2014 21:49:18 GMT").toTimeString();
-            var data2a = new Date("Thu, 11 Dec 2014 22:00:18 GMT").toTimeString();
-            var data3a = new Date("Thu, 11 Dec 2014 22:05:18 GMT").toTimeString();
-            var data4a = new Date("Thu, 11 Dec 2014 22:49:18 GMT").toTimeString();
-            var data5a = new Date("Thu, 11 Dec 2014 23:50:18 GMT").toTimeString();
-            var data6a = new Date("Thu, 11 Dec 2014 23:55:18 GMT").toTimeString();
-            var data7a = new Date("Thu, 11 Dec 2014 23:55:18 GMT").toTimeString();
-            var data8a = new Date("Fri, 12 Dec 2014 00:10:18 GMT").toTimeString();
-            testdata.addRows([
-                [data1a.substr(0, 5), 2, 4],
-                [data2a.substr(0, 5), 3, 5],
-                [data3a.substr(0, 5), 5, 1],
-                [data4a.substr(0, 5), 10, 1],
-                [data5a.substr(0, 5), 11, 1],
-                [data6a.substr(0, 5), 1, 6],
-                [data7a.substr(0, 5), 6, 5],
-                [data8a.substr(0, 5), 6, 5]
-            ]);
-            //
-            //row per 'time-slot' - e.g. KeepScore uses 5 minute slots
-            //
-            //
-            //scores[x].playerScore = 0;
-            //console.log("player " + scores[x].playerID + " score to 0");
-            //scores.$save(scores[x]).then(function() {
-            //    // data has been saved to Firebase
-            //    console.log(" -> updated scores");
-            //});
-            //}
-            //}
-            //data.addRows
-            //
-            chart1.data = testdata;
-            chart1.options = {
-                "legend": {
-                    "position": "top",
-                    "maxLines": 4
-                },
-                "displayExactValues": true,
-                "hAxis": {
-                    "title": "TEST DATA ONLY"
-                },
-                "domainAxis": {
-                    "type": "category"
-                }
-            };
-            chart1.formatters = {};
-            $scope.chart = chart1;
-        });
-    } else {
-        console.log("no params");
-    }
-});
+
 app.controller('MainController', function($rootScope, $scope, $firebase, $window, Auth) {
     //ROUTING
     $rootScope.$on("$routeChangeStart", function() {
@@ -497,16 +332,13 @@ app.controller('MainController', function($rootScope, $scope, $firebase, $window
         var userDetails = $firebase(userRef).$asObject();
         $scope.userDetails = userDetails;
     }
-    //$scope.userDetails = $scope.user.child("details");
     //FUNCTIONS
     $scope.login = function() {
-        //console.log("login");
         $scope.auth.$authWithPassword({
             email: $scope.form.email,
             password: $scope.form.password
         }).then(function(authData) {
             console.log("Logged in as:", authData.uid);
-            //$location.path(absUrl);
             $window.location.reload();
         }).
         catch(function(error) {

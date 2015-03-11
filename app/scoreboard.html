@@ -11,15 +11,10 @@
             </div>
             <!-- MAIN CONTENT -->
             <div class="container fluid">
-                <!-- <div class="btn-group" role="group">
-                    <a ng-click="setColumns(1)" class="btn">1</a>
-                    <a ng-click="setColumns(2)" class="btn">2</a>
-                    <a ng-click="setColumns(3)" class="btn">3</a>
-                </div> -->
                 <div class="row">
                     <div>
                         <div class="text-center">
-                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-default" disabled="disabled">{{play.time}}</span> </h3>
+                            <h3>&nbsp;&nbsp;&nbsp;{{play.gameName}}&nbsp;&nbsp;&nbsp;<span class="btn btn-default" disabled="disabled">{{play.ISOtime | date:'fullDate'}}</span> </h3>
                         </div>
                     </div>
                 </div>
