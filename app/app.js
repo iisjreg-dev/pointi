@@ -193,28 +193,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                 //
                 //functions
                 //
-                $scope.setColumns = function(num) { //temp function to test force changing styles
-                    var numberOfColumns2 = num; 
-                    console.log("players: " + numberOfPlayers + ", columns: " + numberOfColumns2)
-                    var styles1 = []; //column 1
-                    var styles2 = []; //column 2
-                    var styles3 = []; //column 3
-                    styles1[1] = "col-xs-12 col-md-6 col-md-offset-3";
-                    styles2[1] = "hidden";
-                    styles3[1] = "hidden";
-                    styles1[2] = "col-xs-12 col-md-5 col-md-offset-1";
-                    styles2[2] = "col-xs-12 col-md-5 col-md-offset-1";
-                    styles3[2] = "hidden";
-                    styles1[3] = "col-xs-12 col-md-4";
-                    styles2[3] = "col-xs-12 col-md-4";
-                    styles3[3] = "col-xs-12 col-md-4";
-                    $scope.columnStyle1 = styles1[numberOfColumns2];
-                    $scope.columnStyle2 = styles2[numberOfColumns2];
-                    $scope.columnStyle3 = styles3[numberOfColumns2];
-                    //console.log("style1: " + styles1[numberOfColumns2]);
-                    //console.log("style2: " + styles2[numberOfColumns2]);
-                    //console.log("style3: " + styles3[numberOfColumns2]);
-                }
+
                 $scope.addPlayer = function() {
                     var time = new Date();
                     //console.log("update time");
@@ -231,6 +210,7 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                         playerScore: 0,
                         turnOrder: 0,
                         tempScore: "",
+                        stars: 0,
                         history: ""
                     });
                     $scope.playerName = "";
@@ -309,6 +289,27 @@ app.controller('ScoreController3', function($rootScope, $scope, $firebase, $rout
                             time: time.toUTCString()
                         });
                     });
+                }
+                
+                $scope.updateStars = function(player, update) {
+                    //var playerNum = players.$indexFor(player.$id);
+                    //$rootScope.toggle('overlay-' + player.$id, 'off');
+                    
+                    var time = new Date();
+                    //console.log("update time");
+                    play.time = time.toUTCString();
+                    play.ISOtime = time.toISOString();
+                    play.$save();
+                    var newScore = player.stars + Number(update);
+                    if(newScore>3) newScore = 3;
+                    if(newScore<0) newScore = 0;
+                    //console.log(player.playerName + " scored " + update + " = " + newScore);
+                    player.stars = newScore;                    
+                    players.$save(player).then(function() {
+                        // data has been saved to Firebase
+                        console.log(" -> successful");
+                    });
+                    
                 }
             });
         } else {

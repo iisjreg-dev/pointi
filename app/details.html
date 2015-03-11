@@ -39,7 +39,10 @@
                 <div class="row">
                     &nbsp;&nbsp;&nbsp;
                     <div class="btn-group" role="group">
-                        <a class="btn btn-default name-width" disabled="disabled"><strong class="text-capitalize"> {{player.playerName}}</strong>
+                        <a class="btn btn-default name-width" disabled="disabled"><strong class="text-capitalize"> {{player.playerName}}</strong> <small><i class="fa fa-star" ng-if="player.stars>0"></i>
+                                <i class="fa fa-star" ng-if="player.stars>1"></i>
+                                <i class="fa fa-star" ng-if="player.stars>2"></i>
+                                </small>
                             </a>
                         <a class="btn btn-primary score-width" disabled="disabled">
                                 {{player.playerScore}}&nbsp;&nbsp;<sup><i class="badge">{{player.tempScore}}</i></sup>
@@ -79,19 +82,24 @@
                             <button class="btn btn-danger" ng-click="updateScore(player,-10)"><i class="fa fa-minus-square-o fa-fw"></i>10</button>
                         </div>
                     </p>
+                <h4 class="overlay-title text-capitalize">Stars for {{player.playerName}}</h4>
+                    
                     <p>
-                        <div class="btn-group toggleable-dropdown" active-class="open" id="myDropdown" toggleable>
-                            <button type="button" class="btn btn-info dropdown-toggle" toggle target="myDropdown">
-                                Add badge <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu list-group" role="menu" toggle="off" bubble target="myDropdown">
-                                <li class="list-group-item"><a href>Happy</a>
-                                </li>
-                                <li class="list-group-item"><a href>Volunteer</a>
-                                </li>
-                                <li class="list-group-item"><a href>Extreme</a>
-                                </li>
-                            </ul>
+                        <div class="btn-group">
+                            <a class="btn btn-default" ng-click="updateStars(player,-1)">
+                                <i class="fa fa-minus-square-o fa-fw"></i>
+                            </a>
+                            <a class="btn btn-default">
+                                <i class="fa fa-star" ng-if="player.stars>0"></i>
+                                <i class="fa fa-star-o" ng-if="player.stars<1"></i>
+                                <i class="fa fa-star" ng-if="player.stars>1"></i>
+                                <i class="fa fa-star-o" ng-if="player.stars<2"></i>
+                                <i class="fa fa-star" ng-if="player.stars>2"></i>
+                                <i class="fa fa-star-o" ng-if="player.stars<3"></i>
+                            </a>
+                            <a class="btn btn-default" ng-click="updateStars(player,1)">
+                                <i class="fa fa-plus-square-o fa-fw"></i>
+                            </a>
                         </div>
                     </p>
                 </div>
